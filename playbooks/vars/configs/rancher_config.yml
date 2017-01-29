@@ -1,0 +1,5 @@
+---
+rancher_parameters:
+    url: "http://localhost:8080"
+    access_key: "admin_access_key"
+    secret_key: "admin_secret_key"

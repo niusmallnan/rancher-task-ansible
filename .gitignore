@@ -1,0 +1,13 @@
+*.pyc
+.DS_Store
+.DS_Store?
+*.bak
+*.swp
+
+# virtualenv
+.venv/
+venv/
+env/
+
+
+playbooks/test.yml
