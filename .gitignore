@@ -11,3 +11,4 @@ env/
 
 
 playbooks/test.yml
+playbooks/*.retry

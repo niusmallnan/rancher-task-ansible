@@ -30,7 +30,10 @@ class LookupModule(LookupBase):
                                   access_key=access_key,
                                   secret_key=secret_key)
 
-            for env in client.list_host():
-                ret.append(env.id)
+            for host in client.list_host():
+                ret.append({"id": host.id,
+                            "name": host.name or host.hostname,
+                            "state": host.state,
+                            "agentState": host.agentState})
 
         return ret
