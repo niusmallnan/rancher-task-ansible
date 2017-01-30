@@ -31,8 +31,8 @@ class LookupModule(LookupBase):
                                   secret_key=secret_key)
 
             for env in client.list_project():
-                ret.append({"id", env.id,
-                            "name", env.name,
-                            "state", env.state})
+                ret.append({"id": env.id,
+                            "name": env.name,
+                            "state": env.state})
 
         return ret
