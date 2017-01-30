@@ -1,0 +1,21 @@
+---
+# Check stack state
+#
+#
+# failed_when: check_stack.stdout["healthState"] != "{{should_health_state}}"
+
+- name: Debug rancher parameters
+  debug: var=rancher_parameters
+
+- name: Check stack state
+  rancher_stack:
+    rancher_parameters: "{{rancher_parameters}}"
+    stack_name: "{{item}}"
+    env_id: "{{rancher_env.id}}"
+    action: check
+    should_health_state: "{{should_health_state}}"
+  #register: check_stack
+  #until: check_stack | success
+  #failed_when: false
+  ignore_errors: yes
+  with_items: "{{stacks}}"

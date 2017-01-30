@@ -1,0 +1,32 @@
+---
+# Upgrade infra services
+# version change:
+#   ---------------------------------------
+#   infra stack         |   old |   new   |
+#   ---------------------------------------
+#   beancounter-agent   |   1   |   2     |
+#   healthcheck         |   0   |   1     |
+#   network-services    |   6   |   7     |
+#   scheduler           |   0   |   2     |
+#   ---------------------------------------
+# notice:
+#   * before upgrading network-services, just make sure scheduler has been stopped.
+#
+
+- name: Upgrade beancounter agent
+
+
+- name: Upgrade healthcheck
+
+
+- name: Upgrade scheduler
+
+
+- name: Deactive scheduler
+
+
+- name: Upgrade network services
+
+
+- name: Active scheduler
+
