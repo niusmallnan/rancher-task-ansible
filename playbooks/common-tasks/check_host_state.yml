@@ -1,0 +1,8 @@
+---
+#
+#
+#
+
+- name: Check host state
+  fail: msg="host {{rancher_host.id}} state is {{rancher_host.agentState}}"
+  when: rancher_host.agentState != "{{should_agent_state}}"
