@@ -45,6 +45,9 @@ def check_stack(client, module):
     env, stack = get_env_and_stack(client, params)
     if not stack:
         return {"checked": False}
+    if params["ignore_empty_env"] and len(env.hosts()) == 0:
+        return {"checked": True}
+
     if params["should_health_state"] and stack.healthState != params["should_health_state"]:
         msg = "Failed to check env: %s, stack: %s, healthState: %s" % (env.id,
                                                                        stack.name,
@@ -116,6 +119,7 @@ def main():
         # for stack check
         "should_health_state": {"required": False, "type": "str"},
         "should_state": {"required": False, "type": "str"},
+        "ignore_empty_env": {"required": False, "default": False, "type": "bool" },
 
         # for stack upgrade
         "docker_compose": {"required": False, type:"path"},
