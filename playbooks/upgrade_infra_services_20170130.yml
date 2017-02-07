@@ -5,11 +5,8 @@
 - name: Upgrade infrastructure services
   hosts: 127.0.0.1
   connection: local
-  vars:
-    rancher_parameters:
-      url: "http://54.222.227.190:8082"
-      access_key: "8AB3F045EDCFA339B109"
-      secret_key: "FkVfs5NBurvdP9TgSgdYwphmgFDxZ8EQBYnRKAEE"
+  vars_files:
+    - temp_rancher_config.yml
 
   pre_tasks:
     - include: common-tasks/check_stack_state.yml
