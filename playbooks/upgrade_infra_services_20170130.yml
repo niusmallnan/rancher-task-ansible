@@ -1,17 +1,6 @@
 ---
 # Upgrade infra services
-# version change:
-#   ---------------------------------------
-#   infra stack         |   old |   new   |
-#   ---------------------------------------
-#   beancounter-agent   |   1   |   2     |
-#   healthcheck         |   0   |   1     |
-#   network-services    |   6   |   7     |
-#   scheduler           |   0   |   2     |
-#   ---------------------------------------
-# notice:
-#   * before upgrading network-services, just make sure scheduler has been stopped.
-#
+# It is a example.
 
 - name: Upgrade infrastructure services
   hosts: 127.0.0.1
@@ -24,7 +13,6 @@
 
   pre_tasks:
     - include: common-tasks/check_stack_state.yml
-      ignore_errors: yes
       with_rancher_envs:
         - "{{rancher_parameters}}"
       loop_control:
@@ -32,7 +20,6 @@
         pause: 1
       vars:
         stacks:
-          - beancounter-agent
           - healthcheck
           - network-services
           - scheduler
@@ -57,6 +44,5 @@
         loop_var: rancher_env
       vars:
         catalog_infra_dir: "/Users/niusmallnan/rancher_work/rancher-catalog/infra-templates"
-        influxdb_host: 172.31.2.230
 
 

@@ -4,54 +4,31 @@
 #   ---------------------------------------
 #   infra stack         |   old |   new   |
 #   ---------------------------------------
-#   beancounter-agent   |   1   |   2     |
-#   healthcheck         |   0   |   1     |
-#   network-services    |   6   |   7     |
-#   scheduler           |   0   |   2     |
+#   healthcheck         |   0   |   2     |
+#   network-services    |   6   |   9     |
+#   scheduler           |   0   |   3     |
 #   ---------------------------------------
 # notice:
 #   * before upgrading network-services, just make sure scheduler has been stopped.
 #
 
-- name: Upgrade beancounter agent
-  rancher_stack:
-    rancher_parameters: "{{rancher_parameters}}"
-    stack_name: beancounter-agent
-    env_id: "{{rancher_env.id}}"
-    docker_compose: "{{catalog_infra_dir}}/beancounter-agent/2/docker-compose.yml"
-    rancher_compose: "{{catalog_infra_dir}}/beancounter-agent/2/rancher-compose.yml"
-    external_id: "catalog://library:infra*beancounter-agent:2"
-    environment:
-      INFLUXDB_HOST: "{{influxdb_host}}"
-    action: upgrade
-  register: upgrade_bc_stack
-  until: upgrade_bc_stack.has_key("meta") and upgrade_bc_stack.meta.upgraded
-  retries: 5
-  delay: 2
-
-- name: Finish upgrade beancounter agent
-  rancher_stack:
-    rancher_parameters: "{{rancher_parameters}}"
-    stack_name: beancounter-agent
-    env_id: "{{rancher_env.id}}"
-    action: finish_upgrade
-  when: upgrade_bc_stack.has_key("meta") and upgrade_bc_stack.meta.upgraded
-
-- name: Upgrade healthcheck
+- name: Upgrade healthcheck in env {{rancher_env.id}}
   rancher_stack:
     rancher_parameters: "{{rancher_parameters}}"
     stack_name: healthcheck
     env_id: "{{rancher_env.id}}"
-    docker_compose: "{{catalog_infra_dir}}/healthcheck/1/docker-compose.yml"
-    rancher_compose: "{{catalog_infra_dir}}/healthcheck/1/rancher-compose.yml"
-    external_id: "catalog://library:infra*healthcheck:1"
+    docker_compose: "{{catalog_infra_dir}}/healthcheck/{{version}}/docker-compose.yml"
+    rancher_compose: "{{catalog_infra_dir}}/healthcheck/{{version}}/rancher-compose.yml"
+    external_id: "catalog://library:infra*healthcheck:{{version}}"
     action: upgrade
   register: upgrade_healthcheck_stack
   until: upgrade_healthcheck_stack.meta.upgraded
   retries: 5
-  delay: 2
+  delay: 10
+  vars:
+    version: 2
 
-- name: Finish upgrade healthcheck
+- name: Finish upgrade healthcheck in env {{rancher_env.id}}
   rancher_stack:
     rancher_parameters: "{{rancher_parameters}}"
     stack_name: healthcheck
@@ -59,23 +36,25 @@
     action: finish_upgrade
   when: upgrade_healthcheck_stack.meta.upgraded
   retries: 5
-  delay: 2
+  delay: 10
 
-- name: Upgrade scheduler
+- name: Upgrade scheduler in env {{rancher_env.id}}
   rancher_stack:
     rancher_parameters: "{{rancher_parameters}}"
     stack_name: scheduler
     env_id: "{{rancher_env.id}}"
-    docker_compose: "{{catalog_infra_dir}}/scheduler/2/docker-compose.yml"
-    rancher_compose: "{{catalog_infra_dir}}/scheduler/2/rancher-compose.yml"
-    external_id: "catalog://library:infra*scheduler:2"
+    docker_compose: "{{catalog_infra_dir}}/scheduler/{{version}}/docker-compose.yml"
+    rancher_compose: "{{catalog_infra_dir}}/scheduler/{{version}}/rancher-compose.yml"
+    external_id: "catalog://library:infra*scheduler:{{version}}"
     action: upgrade
   register: upgrade_scheduler_stack
   until: upgrade_scheduler_stack.meta.upgraded
   retries: 5
-  delay: 2
+  delay: 10
+  vars:
+    version: 3
 
-- name: Finish upgrade scheduler
+- name: Finish upgrade scheduler in env {{rancher_env.id}}
   rancher_stack:
     rancher_parameters: "{{rancher_parameters}}"
     stack_name: scheduler
@@ -83,9 +62,9 @@
     action: finish_upgrade
   when: upgrade_scheduler_stack.meta.upgraded
   retries: 5
-  delay: 2
+  delay: 10
 
-- name: Deactive scheduler
+- name: Deactive scheduler in env {{rancher_env.id}}
   rancher_stack:
     rancher_parameters: "{{rancher_parameters}}"
     stack_name: scheduler
@@ -94,23 +73,25 @@
   register: deactive_scheduler_stack
   until: deactive_scheduler_stack.meta.stopped
   retries: 5
-  delay: 2
+  delay: 10
 
-- name: Upgrade network services
+- name: Upgrade network services in env {{rancher_env.id}}
   rancher_stack:
     rancher_parameters: "{{rancher_parameters}}"
     stack_name: network-services
     env_id: "{{rancher_env.id}}"
-    docker_compose: "{{catalog_infra_dir}}/network-services/7/docker-compose.yml"
-    rancher_compose: "{{catalog_infra_dir}}/network-services/7/rancher-compose.yml"
-    external_id: "catalog://library:infra*network-services:7"
+    docker_compose: "{{catalog_infra_dir}}/network-services/{{version}}/docker-compose.yml"
+    rancher_compose: "{{catalog_infra_dir}}/network-services/{{version}}/rancher-compose.yml"
+    external_id: "catalog://library:infra*network-services:{{version}}"
     action: upgrade
   register: upgrade_nw_stack
   until: upgrade_nw_stack.meta.upgraded
   retries: 5
-  delay: 2
+  delay: 10
+  vars:
+    version: 9
 
-- name: Finish network services
+- name: Finish network services in env {{rancher_env.id}}
   rancher_stack:
     rancher_parameters: "{{rancher_parameters}}"
     stack_name: network-services
@@ -118,9 +99,9 @@
     action: finish_upgrade
   when: upgrade_nw_stack.meta.upgraded
   retries: 5
-  delay: 2
+  delay: 10
 
-- name: Active scheduler
+- name: Active scheduler in env {{rancher_env.id}}
   rancher_stack:
     rancher_parameters: "{{rancher_parameters}}"
     stack_name: scheduler
