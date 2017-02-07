@@ -4,7 +4,7 @@
 #
 # failed_when: check_stack.stdout["healthState"] != "{{should_health_state}}"
 
-- name: Check stack state
+- name: Check stack state {{rancher_env.id}}
   rancher_stack:
     rancher_parameters: "{{rancher_parameters}}"
     stack_name: "{{item}}"
@@ -12,6 +12,7 @@
     action: check
     should_health_state: "{{should_health_state}}"
     should_state: "{{should_state}}"
+    ignore_empty_env: true
   #register: check_stack
   #until: check_stack | success
   #failed_when: false
