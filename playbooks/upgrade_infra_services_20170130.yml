@@ -1,6 +1,7 @@
 ---
 # Upgrade infra services
 # It is a example.
+# ansible-playbook <xxx.yml> --skip-tags "xx,yy"
 
 - name: Upgrade infrastructure services
   hosts: 127.0.0.1
@@ -22,6 +23,8 @@
           - scheduler
         should_health_state: healthy
         should_state: active
+      tags:
+        - check-stack
     - include: common-tasks/check_host_state.yml
       with_rancher_hosts:
         - "{{rancher_parameters}}"
@@ -30,6 +33,8 @@
         pause: 1
       vars:
         should_agent_state: active
+      tags:
+        - check-host
 
   tasks:
     - include: history-tasks/upgrade_infra_services_20170130.yml
@@ -41,5 +46,7 @@
         loop_var: rancher_env
       vars:
         catalog_infra_dir: "/Users/niusmallnan/rancher_work/rancher-catalog/infra-templates"
+      tags:
+        - upgrade-stack
 
 
