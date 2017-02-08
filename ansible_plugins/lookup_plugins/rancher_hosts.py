@@ -31,6 +31,10 @@ class LookupModule(LookupBase):
                                   secret_key=secret_key)
 
             for host in client.list_host():
+                # FIXME
+                if host.agentState is None and host.state == "active":
+                    host.agentState = "active"
+
                 ret.append({"id": host.id,
                             "name": host.name or host.hostname,
                             "state": host.state,

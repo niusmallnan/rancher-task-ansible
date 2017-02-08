@@ -30,7 +30,10 @@ class LookupModule(LookupBase):
                                   access_key=access_key,
                                   secret_key=secret_key)
 
-            for env in client.list_project():
+            for env in client.list_project(all=True):
+                # filter inactive envs
+                if env.state != "active":
+                    continue
                 ret.append({"id": env.id,
                             "name": env.name,
                             "state": env.state})
